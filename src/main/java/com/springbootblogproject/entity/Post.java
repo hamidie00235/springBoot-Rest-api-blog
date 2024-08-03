@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "posts",uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
+@Table(name = "posts", uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
 public class Post {
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)
     private Long id;
-@Column(name = "tile",nullable = false)
+@Column(name = "title",nullable = false)
     private String title ;
     @Column(name = "description",nullable = false)
     private String description;
