@@ -1,6 +1,7 @@
 package com.springbootblogproject.service.impl;
 
 import com.springbootblogproject.entity.Post;
+import com.springbootblogproject.exception.ResourceNotFoundException;
 import com.springbootblogproject.payload.PostDto;
 import com.springbootblogproject.repository.PostRepository;
 import com.springbootblogproject.service.PostService;
@@ -38,6 +39,13 @@ public class PostServiceImp implements PostService {
 
 
     }
+
+    @Override
+    public PostDto getPostById(long id) {
+        Post post =postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id" ,id));
+        return mapToDTO(post);
+    }
+
     // convert entity to dto
     private PostDto mapToDTO(Post post){
         PostDto postDto =new PostDto();
