@@ -8,6 +8,7 @@ import com.springbootblogproject.payload.CommentDto;
 import com.springbootblogproject.repository.CommentRepository;
 import com.springbootblogproject.repository.PostRepository;
 import com.springbootblogproject.service.CommentService;
+import org.aspectj.util.LangUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +68,31 @@ public class CommentServiceImpl implements CommentService {
         }
 
         return mapToDto(comment);
+    }
+
+    @Override
+    public CommentDto updateComment(long postId, long commentId, CommentDto commentRequest) {
+        // Retrieve post entity by id to ensure it exists
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+
+        // Retrieve comment by id
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
+
+        // Check if the comment belongs to the given post
+        if(!comment.getPost().getId().equals(post.getId())) {
+            throw new BlogApiException("comment does not belong to post", HttpStatus.BAD_REQUEST);
+        }
+
+        // Update the comment's details
+        comment.setName(commentRequest.getName());
+        comment.setEmail(commentRequest.getEmail());
+        comment.setBody(commentRequest.getBody());
+
+        // Save the updated comment
+        Comment updatedComment = commentRepository.save(comment);
+        return mapToDto(updatedComment);
     }
 
     // Convert entity to DTO
