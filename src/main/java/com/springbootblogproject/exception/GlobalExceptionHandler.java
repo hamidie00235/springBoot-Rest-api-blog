@@ -13,17 +13,24 @@ import java.util.Date;
 public class GlobalExceptionHandler {
     // handle specific exceptions
     @ExceptionHandler(ResourceNotFoundException.class)
-     public ResponseEntity <ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest){
-         ErrorDetails errorDetails=new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
-         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-     }
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(BlogApiException.class)
-    public ResponseEntity <ErrorDetails> handleResourceNotFoundException(BlogApiException exception, WebRequest webRequest){
-        ErrorDetails errorDetails=new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(BlogApiException exception, WebRequest webRequest) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
+    // Handle global exceptions
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDetails> handleGlobalError(Exception exception, WebRequest webRequest) {
+        // Create an ErrorDetails object with the current date, the exception message, and the request description
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), webRequest.getDescription(false));
 
-    // handle a global exceptions
-
+        // Return a ResponseEntity with the error details and an HTTP status of INTERNAL_SERVER_ERROR (500)
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
